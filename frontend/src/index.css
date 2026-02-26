@@ -1,0 +1,56 @@
+:root {
+  --primary: #2563eb;
+  --secondary: #10b981;
+  --dark: #1f2937;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--dark);
+  background-color: #f9fafb;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 5%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.hero-section {
+  text-align: center;
+  padding: 4rem 10%;
+  background: linear-gradient(to bottom, #ffffff, #f3f4f6);
+}
+
+.cta-button {
+  background: var(--primary);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2rem auto;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  padding: 3rem 5%;
+  gap: 20px;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  text-align: center;
+  flex: 1;
+}
