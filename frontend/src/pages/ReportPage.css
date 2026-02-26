@@ -1,0 +1,76 @@
+.location-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.location-input-group input {
+  flex: 1;
+  background: #f1f5f9; /* Light grey to show it's read-only */
+}
+
+.detect-btn {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.detect-btn:hover {
+  background: #059669;
+}
+
+.file-upload {
+  text-align: left;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 15px;
+}
+
+.submit-btn {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.description-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.ai-suggest-btn {
+  align-self: flex-end;
+  background: #f0f4ff;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ai-suggest-btn:hover:not(:disabled) {
+  background: #dbeafe;
+}
+
+.ai-suggest-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit-btn:disabled {
+  background: #94a3b8;
+}

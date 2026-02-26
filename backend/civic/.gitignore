@@ -31,3 +31,33 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Secrets and Environment Variables
+.env
+.env.local
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+.mvn/wrapper/maven-wrapper.jar
+
+# Node / React
+node_modules/
+dist/
+build/
+.eslintcache
+
+# IDE Specific (VS Code / IntelliJ)
+.vscode/
+.idea/
+*.swp
+*.iml
+
+# Local OS Files
+.DS_Store
+Thumbs.db
+
+# Project Specific Uploads (Prevents uploading citizen photos)
+backend/civic/C:/CIVIC/uploads/

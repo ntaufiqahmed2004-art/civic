@@ -2,9 +2,11 @@ package com.devopstitans.civic.repository;
 
 import com.devopstitans.civic.model.Complaint;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
-    // Basic save, delete, find methods are already included here by default!
+    
+    // This naming convention tells Spring: 
+    // "Find by Dept (ignore capital letters) AND Location (if it contains the city name)"
+    List<Complaint> findByDepartmentIgnoreCaseAndLocationContainingIgnoreCase(String department, String location);
 }

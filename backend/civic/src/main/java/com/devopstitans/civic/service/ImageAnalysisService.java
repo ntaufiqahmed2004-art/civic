@@ -1,30 +1,67 @@
 package com.devopstitans.civic.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import java.util.*;
 
 @Service
 public class ImageAnalysisService {
 
-    @Value("${google.ai.api.key}")
-    private String apiKey;
+    // 1. Pull the key from application.properties (which pulls from your .env)
+    @Value("${GEMINI_API_KEY}")
+    private String apiKey; 
 
-    public String verifyImage(String imagePath) throws Exception {
-        // --- EMERGENCY HACKATHON BYPASS ---
-        // This makes sure the variables exist and the code compiles.
-        System.out.println("MOCKING AI: Analyzing image at " + imagePath);
+    public String analyzeImage(byte[] imageBytes) {
+        RestTemplate restTemplate = new RestTemplate();
         
-        // We return "VALID" so your Controller saves the data to MySQL
-        return "VALID"; 
-        
-        /* To re-enable AI later, move this 'return VALID' down 
-           and uncomment the code below.
-        */
+        // 2. Build the URL inside the method so it uses the injected apiKey
+        String geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" + apiKey;
+
+        String prompt = "Act as a civic authority inspector. Analyze this image: " +
+                        "Ignore background noise. " +
+                        "1. If a human face is in foreground, reply ONLY: PRIVACY_ERROR. " +
+                        "2. If no humans and a civic issue exists, reply: VALID | [1-sentence description]. " +
+                        "3. Otherwise, reply: NOT_CIVIC_ISSUE.";
+
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // Building the Request Body
+        Map<String, Object> inlineData = Map.of(
+            "mime_type", "image/jpeg",
+            "data", base64Image
+        );
+        Map<String, Object> part1 = Map.of("text", prompt);
+        Map<String, Object> part2 = Map.of("inline_data", inlineData);
+        Map<String, Object> contents = Map.of("parts", List.of(part1, part2));
+        Map<String, Object> body = Map.of("contents", List.of(contents));
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        try {
+            // Use the locally built geminiUrl
+            ResponseEntity<Map> response = restTemplate.exchange(geminiUrl, HttpMethod.POST, entity, Map.class);
+            return extractText(response.getBody());
+        } catch (Exception e) {
+            System.err.println("API Error Details: " + e.getMessage());
+            return "ERROR | AI_VERIFICATION_FAILED";
+        }
+    }
+
+    private String extractText(Map responseBody) {
+        try {
+            List candidates = (List) responseBody.get("candidates");
+            Map candidate = (Map) candidates.get(0);
+            Map content = (Map) candidate.get("content");
+            List parts = (List) content.get("parts");
+            return (String) ((Map) parts.get(0)).get("text");
+        } catch (Exception e) {
+            System.err.println("Parse Error: " + e.getMessage());
+            return "ERROR_PARSING";
+        }
     }
 }

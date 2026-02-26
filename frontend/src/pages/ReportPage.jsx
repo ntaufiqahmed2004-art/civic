@@ -1,88 +1,136 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Camera, Send, MapPin } from 'lucide-react';
+import { DEPARTMENTS } from '../constants';
+import { getCityFromBrowser } from '../utils/locationHelper';
+import './ReportPage.css';
 
-const ReportPage = ({ onNavigate }) => {
+const ReportPage = ({ user, onNavigate, onSuccess }) => {
   const [formData, setFormData] = useState({
-    email: '',
+    email: user ? user.email : '', 
     description: '',
-    department: 'Roads',
-    location: '',
-    image: null
+    department: '',
+    location: ''
   });
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [detecting, setDetecting] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false); // New state for AI button
 
-  // Automatically get location when page loads
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setFormData(prev => ({
-          ...prev,
-          location: `${position.coords.latitude}, ${position.coords.longitude}`
-        }));
-      });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleDetect = async () => {
+    setDetecting(true);
+    try {
+      const city = await getCityFromBrowser();
+      setFormData(prev => ({ ...prev, location: city }));
+    } catch (err) {
+      alert("Could not detect location: " + err);
+    } finally {
+      setDetecting(false);
     }
-  }, []);
+  };
+
+  // NEW: Function to call Gemini for a suggested description
+  const handleAISuggest = async () => {
+    if (!image) return alert("Please upload a photo first!");
+    
+    setAiLoading(true);
+    const data = new FormData();
+    data.append('image', image);
+
+    try {
+      const res = await axios.post('http://localhost:8080/api/complaints/describe', data);
+      setFormData(prev => ({ ...prev, description: res.data }));
+    } catch (err) {
+      alert(err.response?.data || "AI could not describe this image.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.location) return alert("Please detect your location first!");
     
-    // FormData is required for sending Files to Spring Boot
+    setLoading(true);
     const data = new FormData();
     data.append('email', formData.email);
     data.append('description', formData.description);
     data.append('department', formData.department);
     data.append('location', formData.location);
-    data.append('image', formData.image);
+    data.append('image', image);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/complaints/submit', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      alert(response.data); // Should show your success message from Java
-      onNavigate('landing'); // Go back to home after success
-    } catch (error) {
-      console.error(error);
-      alert("Submission failed. Check if Backend is running!");
+      const res = await axios.post('http://localhost:8080/api/complaints/submit', data);
+      alert(res.data); // This will show "AI verified..." or specific rejection messages
+      if (onSuccess) onSuccess(); 
+      else if (onNavigate) onNavigate('landing');
+    } catch (err) {
+      // This catches the AI "Privacy" or "Invalid Issue" rejections
+      alert(err.response?.data || "Submission failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="report-container" style={{ padding: '2rem', maxWidth: '500px', margin: 'auto' }}>
-      <h2>Submit Civic Complaint</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <input 
-          type="email" placeholder="Your Email" required 
-          onChange={(e) => setFormData({...formData, email: e.target.value})} 
-        />
-        
-        <select onChange={(e) => setFormData({...formData, department: e.target.value})}>
-          <option value="Roads">Roads & Potholes</option>
-          <option value="Sanitation">Sanitation / Trash</option>
-          <option value="Electricity">Electricity</option>
-        </select>
-
-        <input 
-          type="text" value={formData.location} placeholder="Location (GPS)" readOnly 
-          style={{ background: '#eee' }}
-        />
-
-        <textarea 
-          placeholder="Describe the issue..." 
-          onChange={(e) => setFormData({...formData, description: e.target.value})} 
-        />
-
-        <div className="file-input">
-          <label><Camera /> Upload Photo</label>
+    <div className="report-container">
+      <div className="report-card">
+        <h3>Report a Problem</h3>
+        <form onSubmit={handleSubmit}>
           <input 
-            type="file" accept="image/*" required
-            onChange={(e) => setFormData({...formData, image: e.target.files[0]})} 
+            type="email" name="email" placeholder="Your Email" 
+            value={formData.email} onChange={handleChange} 
+            required readOnly={!!user} 
           />
-        </div>
 
-        <button type="submit" className="cta-button">
-          <Send size={18} /> Submit Report
-        </button>
-      </form>
+          <select name="department" value={formData.department} onChange={handleChange} required>
+            <option value="">Select Department</option>
+            {DEPARTMENTS.map(dept => (
+              <option key={dept} value={dept}>{dept}</option>
+            ))}
+          </select>
+
+          <div className="location-input-group">
+            <input 
+              type="text" name="location" placeholder="City (Auto-detected)" 
+              value={formData.location} readOnly required 
+            />
+            <button type="button" onClick={handleDetect} className="detect-btn">
+              {detecting ? "..." : "📍 Detect"}
+            </button>
+          </div>
+
+          <div className="description-group">
+            <textarea 
+              name="description" 
+              placeholder="What's the issue? (e.g. Pothole near the market)" 
+              value={formData.description}
+              onChange={handleChange} 
+              required 
+            />
+            <button 
+              type="button" 
+              onClick={handleAISuggest} 
+              className="ai-suggest-btn"
+              disabled={aiLoading || !image}
+            >
+              {aiLoading ? "AI is thinking..." : "✨ AI Suggest Description"}
+            </button>
+          </div>
+
+          <div className="file-upload">
+            <label>Upload Photo of Issue:</label>
+            <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} required />
+          </div>
+
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? "AI is Verifying Image..." : "Submit Report"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
