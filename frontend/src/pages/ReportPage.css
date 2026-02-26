@@ -1,76 +1,189 @@
+/* ============================= */
+/* LOCATION INPUT GROUP */
+/* ============================= */
+/* ============================= */
+/* PAGE BACKGROUND (Light Only) */
+/* ============================= */
+
+.report-container {
+  min-height: 100vh;
+  background: #f4f6f9; /* Official light government background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+
+/* ============================= */
+/* CENTERED REPORT CARD */
+/* ============================= */
+
+.report-card {
+  width: 100%;
+  max-width: 720px; /* Controlled width like login */
+  background: #ffffff;
+  padding: 40px 50px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  position: relative;
+}
+
+
+/* Subtle top institutional accent line */
+.report-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #0f172a, #1e3a8a);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+
+/* ============================= */
+/* HEADING STYLE */
+/* ============================= */
+
+.report-card h3 {
+  margin-bottom: 25px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #0f172a;
+  text-transform: uppercase;
+}
+
 .location-input-group {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .location-input-group input {
   flex: 1;
-  background: #f1f5f9; /* Light grey to show it's read-only */
+  background: #eef2f7; /* Institutional read-only tone */
+  border: 1px solid #d6dde6;
+  color: #1e293b;
+  font-weight: 500;
 }
 
+
+/* ============================= */
+/* DETECT BUTTON (Official Secondary Action) */
+/* ============================= */
+
 .detect-btn {
-  background: #10b981;
-  color: white;
-  border: none;
-  padding: 0 15px;
-  border-radius: 8px;
+  background: #0f172a; /* Deep Government Navy */
+  color: #ffffff;
+  border: 1px solid #0f172a;
+  padding: 0 18px;
+  border-radius: 4px; /* Reduced rounding = more official */
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
 }
 
 .detect-btn:hover {
-  background: #059669;
+  background: #1e293b;
+  border-color: #1e293b;
+  transform: translateY(-1px);
 }
+
+
+/* ============================= */
+/* FILE UPLOAD SECTION */
+/* ============================= */
 
 .file-upload {
   text-align: left;
   font-size: 13px;
-  color: #64748b;
-  margin-bottom: 15px;
+  color: #475569;
+  margin-bottom: 20px;
+  font-weight: 500;
 }
 
-.submit-btn {
-  width: 100%;
-  background: #2563eb;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+.file-upload label {
+  display: block;
+  margin-bottom: 6px;
+  color: #0f172a;
+  font-weight: 600;
 }
+
+
+/* ============================= */
+/* DESCRIPTION GROUP */
+/* ============================= */
 
 .description-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 15px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
+
+
+/* ============================= */
+/* AI SUGGEST BUTTON (Government Tech Accent) */
+/* ============================= */
 
 .ai-suggest-btn {
   align-self: flex-end;
-  background: #f0f4ff;
-  color: #2563eb;
-  border: 1px solid #dbeafe;
-  padding: 6px 12px;
-  border-radius: 6px;
+  background: #ffffff;
+  color: #1d4ed8; /* Official Digital Blue */
+  border: 1px solid #cbd5e1;
+  padding: 7px 14px;
+  border-radius: 4px;
   font-size: 12px;
-  font-weight: bold;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 .ai-suggest-btn:hover:not(:disabled) {
-  background: #dbeafe;
+  background: #f1f5f9;
+  border-color: #94a3b8;
 }
 
 .ai-suggest-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
+
+/* ============================= */
+/* PRIMARY SUBMIT BUTTON */
+/* ============================= */
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #0f172a, #1e3a8a);
+  color: #ffffff;
+  padding: 14px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+}
+
 .submit-btn:disabled {
-  background: #94a3b8;
+  background: #cbd5e1;
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
 }

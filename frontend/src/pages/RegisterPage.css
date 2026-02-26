@@ -1,60 +1,155 @@
-.register-container {
+/* ==========================================
+   GOVERNMENT GLASSMORPHISM AUTH UI
+   (Login + Register Shared Theme)
+========================================== */
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ==========================================
+   BACKGROUND
+========================================== */
+
+.register-container,
+.auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f1f5f9;
+  background: linear-gradient(135deg, #eef2f7, #f8fbff);
+  position: relative;
+  overflow: hidden;
 }
 
-.register-box {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+/* Subtle futuristic background pattern */
+.register-container::before,
+.auth-container::before {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(37,99,235,0.08), transparent 70%);
+  top: -150px;
+  right: -150px;
+  border-radius: 50%;
+}
+
+.register-container::after,
+.auth-container::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(59,130,246,0.06), transparent 70%);
+  bottom: -120px;
+  left: -120px;
+  border-radius: 50%;
+}
+
+/* ==========================================
+   GLASS CARD
+========================================== */
+
+.register-box,
+.auth-box {
+  position: relative;
   width: 100%;
-  max-width: 450px;
+  max-width: 460px;
+  padding: 45px 40px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+  animation: fadeUp 0.6s ease forwards;
 }
 
-.register-box h2 { color: #1e293b; margin: 0; }
-.register-box p { color: #64748b; margin-bottom: 25px; }
+/* Animated professional border */
+.register-box::before,
+.auth-box::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  padding: 2px;
+  background: linear-gradient(
+    120deg,
+    #2563eb,
+    #3b82f6,
+    #60a5fa,
+    #2563eb
+  );
+  background-size: 300% 300%;
+  animation: borderFlow 6s linear infinite;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
 
-form { display: flex; flex-direction: column; gap: 15px; }
+@keyframes borderFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
 
-input, select {
-  padding: 12px;
+/* ==========================================
+   HEADINGS
+========================================== */
+
+.register-box h2,
+.auth-box h2 {
+  margin: 0;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.register-box p {
+  color: #64748b;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+/* ==========================================
+   FORM
+========================================== */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Inputs */
+
+input,
+select {
+  padding: 12px 14px;
   border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.85);
+  font-size: 14px;
+  transition: all 0.25s ease;
   outline: none;
 }
 
-.select-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  text-align: left;
-  font-size: 14px;
-  color: #475569;
+/* Focus Animation */
+
+input:focus,
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+  background: #ffffff;
 }
 
-.reg-btn {
-  background: #2563eb;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.link-btn {
-  background: none;
-  border: none;
-  color: #2563eb;
-  margin-top: 20px;
-  cursor: pointer;
-  font-size: 14px;
-}
+/* ==========================================
+   LOCATION ROW
+========================================== */
 
 .loc-row {
   display: flex;
@@ -66,31 +161,134 @@ input, select {
   background: #f8fafc;
 }
 
+/* Detect Button */
+
 .detect-btn {
-  background: #10b981;
+  background: #0ea5e9;
   color: white;
   border: none;
-  padding: 0 15px;
-  border-radius: 6px;
+  padding: 0 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
+  transition: 0.25s ease;
 }
 
+.detect-btn:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   PRIMARY BUTTONS
+========================================== */
+
+.reg-btn,
 .main-btn {
-  background: #2563eb;
+  background: #1d4ed8;
   color: white;
   padding: 12px;
   border: none;
-  border-radius: 6px;
-  font-weight: bold;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.25s ease;
   margin-top: 10px;
 }
 
+.reg-btn:hover,
+.main-btn:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+/* Secondary Link Button */
+
+.link-btn,
 .toggle-link {
-  color: #2563eb;
+  background: none;
+  border: none;
+  color: #1d4ed8;
+  margin-top: 20px;
   cursor: pointer;
-  text-align: center;
-  margin-top: 15px;
   font-size: 14px;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.link-btn:hover,
+.toggle-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================= */
+/* PAGE BACKGROUND */
+/* ============================= */
+
+.register-container {
+  min-height: 100vh;
+  background: #f4f6f9; /* Official light government background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+
+/* ============================= */
+/* CENTERED REGISTER CARD */
+/* ============================= */
+
+.register-card {
+  width: 100%;
+  max-width: 520px; /* Same width as login for consistency */
+  background: #ffffff;
+  padding: 40px 45px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  position: relative;
+}
+
+
+/* Institutional Top Accent Line */
+.register-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #0f172a, #1e3a8a);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+
+/* ============================= */
+/* HEADING STYLE */
+/* ============================= */
+
+.register-card h3 {
+  margin-bottom: 25px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #0f172a;
+  text-transform: uppercase;
 }
